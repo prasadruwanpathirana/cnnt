@@ -68,6 +68,7 @@
                         <span class="">
                             Filter
                         </span>
+                    <span></span>
                     </label>
                     <div class="slds-form-element__control slds-grow" style="display: inline-block;">
                         <div class="slds-select_container" >
