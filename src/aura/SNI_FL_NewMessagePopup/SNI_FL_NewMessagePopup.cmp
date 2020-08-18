@@ -1,0 +1,45 @@
+<!-- 
+Component Name    : SNI_FL_NewMessagePopup
+Description       : New Message Pop-up
+Created By        : Vamsi
+Created Date      : 13-08-2020
+
+Modification Log: 
+Developer                   Date                   Description
+-->
+
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes" access="global" >
+    
+    <!--aura attributes -->    
+    <aura:attribute name="newMessageBody" type="String" />
+    <aura:attribute name="FamilyName" type="String" />
+    <aura:attribute name="UserName" type="String" />
+    <aura:attribute name="subjectValue" type="String" />
+    <!-- end aura attributes -->    
+    <!--MODAL BOX Start -->
+    <section role="dialog" tabindex="-1" aria-label="Meaningful description of the modal content" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <!--  MODAL BOX HEADER Start -->
+            <header class="slds-modal__header">
+                <lightning:buttonIcon iconName="utility:close" onclick="" alternativeText="close" variant="bare-inverse" class="slds-modal__close" />
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Message</h2> </header>
+            <!-- MODAL BOX BODY Part Start -->
+            <div class="slds-modal__content slds-p-around_medium " id="modal-content-id-1" style="height:30rem;">
+                <lightning:input name="Account" value="{!v.FamilyName}" placeholder="Search Families ..." required='true' label="Family" /><br></br>
+                <lightning:input name="User" value="{!v.UserName}" placeholder="Search Care Team Members ..." required='true' label="To" /><br></br>
+                <lightning:input name="input3" value="{!v.subjectValue}" placeholder="What's your message about?" label="Subject" /><br></br>
+                <label class="uiLabel-left form-element__label uiLabel" data-aura-class="uiLabel"><span class="">Message</span></label>
+                <lightning:inputRichText variant="bottom-toolbar" value="{!v.newMessageBody}" disabledCategories="FORMAT_FONT,ALIGN_TEXT" placeholder="Enter your message here ..." shareWithEntityId="{!v.recordId}">
+                    <lightning:insertImageButton/></lightning:inputRichText><br></br>
+                <lightning:buttonIcon iconName="utility:attach" size="medium" variant="container" alternativeText="Settings" title="Settings" />
+            </div>
+           
+            <!-- MODAL BOX FOOTER Part Start -->
+            <footer class="slds-modal__footer">
+                <lightning:button  label="Cancel"  onclick="{!c.closeModel}"  />
+                <lightning:button  label="Send"  onclick="{! c.sendFirstMessage}" />
+            </footer>
+        </div>
+    </section>
+    
+</aura:component>

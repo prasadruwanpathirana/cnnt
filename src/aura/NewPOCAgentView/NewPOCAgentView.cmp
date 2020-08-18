@@ -1,0 +1,96 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                controller="DirectMessageUtil" access="global" >
+    
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    <aura:attribute name="directMsgWrapper" type="DirectMessageWrapper[]"></aura:attribute><!--Added by sameera-->
+    <aura:attribute name="selectedMsgWrapper" type="DirectMessageWrapper"></aura:attribute>
+    <aura:attribute name="isOpenNewMsg" type="boolean" default="false"/>
+    <aura:attribute name="openBackupAgentModal" type="Boolean"/>
+    <aura:attribute name="selectedAccountLookUpRecords" type="sObject" default="{}"/>
+    <aura:attribute name="selectedUserLookUpRecords" type="sObject" default="{}"/>
+    <aura:attribute name="newMessageBody" type="String"/>
+    <aura:attribute name="subjectValue" type="String"/>
+    
+    <aura:attribute name="replyValue" type="String"/>
+    <aura:attribute name="userIdValue" type="String"/>
+    <aura:attribute name="selectedFeedIdValue" type="String"/>
+    <aura:attribute Name="selItem" type="object"  access="public" /> 
+    <aura:attribute name="feedElementID" type="String"/>
+    <aura:attribute name="titleName" type="String"/>
+    <aura:attribute name="toggleValue" type="boolean"/>
+    <aura:attribute name="loaded" type="Boolean" default="true" />
+    <aura:attribute name="idX" type="String" />
+    <aura:attribute name="isSpinnerHide" type="Boolean" default="true" />
+    <lightning:workspaceAPI aura:id="workspace" />
+    <aura:attribute name="items" type="List" default="[
+                                                      {
+                                                      type: 'icon',
+                                                      href: '',
+                                                      label: 'Advisor1',
+                                                      iconName: 'standard:account',
+                                                      alternativeText: 'Account',
+                                                      },
+                                                      {
+                                                      type: 'icon',
+                                                      href: '',
+                                                      label: 'Advisor2',
+                                                      iconName: 'standard:account',
+                                                      alternativeText: 'Account',
+                                                      },
+                                                      ]"/>
+    
+    
+    <aura:attribute name="attachId" type="String"></aura:attribute>
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="accept" type="List" default="['.pdf', '.zip','.txt']"/>
+    <aura:attribute name="multiple" type="Boolean" default="true"/>
+    
+    <aura:attribute name="markDirectMsgWrapper" type="DirectMessageWrapper[]"/>
+    <aura:attribute name="unMarkedDirectMsgWrapper" type="DirectMessageWrapper[]"/>
+    <aura:attribute name="allDirectMsgWrapper" type="DirectMessageWrapper[]"/>
+    <aura:attribute name="FullDirectMsgWrapper" type="DirectMessageWrapper[]"/>
+    <aura:method name="parentMethod" action="{!c.doInit}"/>
+    
+    
+    <!-- Header 1  Message and Subject -->
+    
+    <div class="slds-grid slds-theme_shade slds-box" style ="padding: 5px;margin-bottom: -22px; margin-top: -15px;" >
+        
+        <c:MessagingHeader directMsgWrapper="{!v.directMsgWrapper}" isOpenNewMsg="{!v.isOpenNewMsg}" titleName="{!v.titleName}" openBackupAgentModal="{!v.openBackupAgentModal}"
+                           markDirectMsgWrapper="{!v.markDirectMsgWrapper}" unMarkedDirectMsgWrapper="{!v.unMarkedDirectMsgWrapper}"
+                           allDirectMsgWrapper="{!v.allDirectMsgWrapper}" FullDirectMsgWrapper="{!v.FullDirectMsgWrapper}" ></c:MessagingHeader>
+        
+    </div>
+    <div class="slds-p-bottom_x-small"></div>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-1"> 
+            <span><br/></span>
+        </div>
+        <div class="slds-col slds-size_1-of-5 slds-theme_shade">
+            
+            <c:MessagingList isSpinnerHide="{!v.isSpinnerHide}" directMsgWrapper="{!v.directMsgWrapper}" selectedFeedIdValue="{!v.selectedFeedIdValue}" 
+                             selectedMsgWrapper="{!v.selectedMsgWrapper}" replyValue="{!v.replyValue}" ></c:MessagingList>
+            
+        </div>
+        
+        <div class="slds-col slds-size_4-of-5 slds-box slds-theme_default"  >
+            <c:CommonMessagingView directMsgWrapper="{!v.directMsgWrapper}" userIdValue="{!v.userIdValue}" isSpinnerHide="{!v.isSpinnerHide}" 
+                                   selectedMsgWrapper="{!v.selectedMsgWrapper}" selectedFeedIdValue="{!v.selectedFeedIdValue}"
+                                   replyValue="{!v.replyValue}" attachId="{!v.attachId}" ></c:CommonMessagingView>
+        </div>
+    </div>
+    
+    <aura:if isTrue="{!v.isOpenNewMsg}">
+        
+        <c:NewMessageView parent="{! this }" isSpinnerHide="{!v.isSpinnerHide}"  selectedAccountLookUpRecords="{!v.selectedAccountLookUpRecords}" selectedUserLookUpRecords="{!v.selectedUserLookUpRecords}" 
+                          newMessageBody="{!v.newMessageBody}" subjectValue="{!v.subjectValue}" isOpenNewMsg="{!v.isOpenNewMsg}" ></c:NewMessageView>
+        
+        <!--###### MODAL BOX Start######--> 
+        
+    </aura:if>
+    
+    <!--Backup Advisor Modal Box-->
+    
+    <c:BackupAdvisorView openBackupAgentModal="{!v.openBackupAgentModal}" ></c:BackupAdvisorView> 
+    
+</aura:component>

@@ -1,0 +1,332 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                controller="BackUpAgentUtil" access="global" >
+    
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    <aura:attribute name="directMsgWrapper" type="DirectMessageWrapper[]"></aura:attribute>
+    <aura:attribute name="selectedMsgWrapper" type="DirectMessageWrapper"></aura:attribute>
+    <aura:attribute name="isOpenNewMsg" type="boolean" default="false"/>
+    <aura:attribute name="openBackupAgentModal" type="Boolean"/>
+    <aura:attribute name="selectedAccountLookUpRecords" type="sObject" default="{}"/>
+    <aura:attribute name="selectedUserLookUpRecords" type="sObject" default="{}"/>
+    <aura:attribute name="newMessageBody" type="String"/>
+    <aura:attribute name="subjectValue" type="String"/>
+    
+    <aura:attribute name="replyValue" type="String"/>
+    <aura:attribute name="userIdValue" type="String"/>
+    <aura:attribute name="selectedFeedIdValue" type="String"/>
+    <aura:attribute Name="selItem" type="object"  access="public" /> 
+    <aura:attribute name="feedElementID" type="String"/>
+    <aura:attribute name="titleName" type="String"/>
+    <aura:attribute name="toggleValue" type="boolean"/>
+    <aura:attribute name="loaded" type="Boolean" default="true" />
+    <aura:attribute name="idX" type="String" />
+    <aura:attribute name="isSpinnerHide" type="Boolean" default="true" />
+    <lightning:workspaceAPI aura:id="workspace" />
+    <aura:attribute name="items" type="List" default="[{type: 'icon',href: '',label: 'Advisor1',iconName: 'standard:account',
+                                                      alternativeText: 'Account'},
+                                                      {type: 'icon',href: '', label: 'Advisor2',
+                                                      iconName: 'standard:account',
+                                                      alternativeText: 'Account',
+                                                      },
+                                                      {
+                                                      type: 'icon',
+                                                      href: '',
+                                                      label: 'Advisor2',
+                                                      iconName: 'standard:account',
+                                                      alternativeText: 'Account',
+                                                      }
+                                                      ]"/>
+    
+    <aura:attribute name="DMList" type="DirectMessageBackUpAgentWrapper"/>
+    <aura:attribute name="PageNumber" type="integer" default="1"/>
+    <aura:attribute name="TotalPages" type="integer" default="0"/>
+    <aura:attribute name="TotalRecords" type="integer" default="0"/>
+    <aura:attribute name="RecordStart" type="integer" default="0"/>
+    <aura:attribute name="RecordEnd" type="integer" default="0"/>
+    
+    <aura:attribute name="FeedIDValue" type="Id"/>
+    <aura:attribute name="DMDetailList" type="DirectMessageBackUpAgentWrapper.DirectMessageComments"/>
+    <aura:attribute name="DetailPageNumber" type="integer" default="1"/>
+    <aura:attribute name="DetailTotalPages" type="integer" default="0"/>
+    <aura:attribute name="DetailTotalRecords" type="integer" default="0"/>
+    <aura:attribute name="DetailRecordStart" type="integer" default="0"/>
+    <aura:attribute name="DetailRecordEnd" type="integer" default="0"/>
+    
+    <!-- Header 1  Message and Subject -->
+    <div class="slds-grid slds-theme_shade slds-box" style ="padding: 5px;margin-bottom: -22px; margin-top: -15px;">
+        <div>
+            <span>
+                <lightning:icon iconName="custom:custom23" alternativeText="user" title="user" size="x-large" class="image"/>
+                <b>&nbsp;&nbsp;{!v.titleName}</b>
+            </span>
+        </div>
+        <div><span></span></div><div><span></span></div><div><span></span></div>
+        <div class="slds-col_bump-left">
+            <span >
+                <div class="slds-form-element selectStyle">
+                    <label class="slds-form-element__label">
+                        <span class="">
+                            Filter
+                        </span>
+                    </label>
+                    <div class="slds-form-element__control slds-grow" style="display: inline-block;">
+                        <div class="slds-select_container" >
+                            <select class="slds-select" id="selectItem"  name="selectItem" style="" onchange="{!c.selectFilterOption}">
+                                <option value="All">All</option>
+                                <option value="Marked" >Marked</option>
+                                <option value="Unmarked" >Unmarked</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </span> 
+        </div>
+        <div>&nbsp;&nbsp;</div>
+        
+        <div >
+            <span >
+                <lightning:button label="New Message" title="New Messages" onclick="{! c.createNewMessage }"/>&nbsp;
+                <lightning:button label="Backup Advisors" title="Backup Advisors" onclick="{! c.openBackupAdvisorModal }"/>
+            </span>
+        </div>
+    </div>
+    <!-- End of Header 1  Message and Subject -->
+    
+    <div class="slds-p-bottom_x-small"></div>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-1"> 
+            <span><br/></span>
+        </div>
+        <div class="slds-col slds-size_1-of-5 slds-theme_shade">
+            <span>
+                <div class="scrollerContainer slds-scrollable " style="height:30rem;">
+                    <div class="scroller  uiScroller scroller-wrapper scroll-vertical native " tabindex="-1">
+                        <div class="scroller ">
+                            <aura:iteration items="{!v.DMList}" var="item" indexVar="index" >
+                                <li class="slds-vertical-tabs__nav-item border-class " title="Tab 1" aura:id="vertical-tab" role="presentation" onclick="{!c.getSelectedTheme}" data-id="{!index}" data-feed-id="{!item.feedId}" escape="false">
+                                    <a class="slds-vertical-tabs__link" href="javascript:void(0)" role="tab" tabindex="0" aria-selected="true" aria-controls="slds-vertical-tabs-0" id="slds-vertical-tabs-0__nav" style="text-decoration:none;">
+                                        <span class="slds-truncate " title="Tab 1" style="color: #333; margin-left: 0.2rem;">
+                                            <p>Family: <a><b>{!item.flMessage.accountName}</b></a> </p>
+                                            <p>From: <a><b>{!item.initatedUser.userFirstName +' '+item.initatedUser.userLastName}</b></a> </p>
+                                            
+                                            {!item.directMssageSubject}<aura:if isTrue="{!empty(item.directMssageSubject)}">No Subject:</aura:if>
+                                        </span>
+                                    </a>
+                                    <aura:if isTrue="{!item.flMessage.marked}">
+                                        <lightning:icon  iconName="action:priority" alternativeText="priority" title="priority" size="small" class="colour "/>
+                                    </aura:if>
+                                </li>
+                            </aura:iteration>
+                        </div>                                
+                    </div>
+                </div>
+                <div class="slds-clearfix">
+                    <div class="slds-page-header" role="banner">
+                        <div class="slds-float_right">            
+                            <lightning:button disabled="{!v.PageNumber == 1}" variant="brand" aura:id="prevPage" label="Prev" onclick="{!c.handlePrev}" />            
+                            <lightning:button disabled="{!v.PageNumber == v.TotalPages}" aura:id="nextPage" variant="brand" label="Next" onclick="{!c.handleNext}"/>
+                        </div>
+                        <p>{!v.RecordStart}-{!v.RecordEnd} of {!v.TotalRecords} | Page {!v.PageNumber} of {!v.TotalPages}</p>
+                    </div>
+                </div>
+            </span>
+        </div>
+        <div class="slds-col slds-size_4-of-5 slds-box slds-theme_default">
+            <span>
+                <lightning:spinner aura:id="Spinner" alternativeText="Loading" size="medium" variant="brand" class="{!v.isSpinnerHide == true ? 'slds-hide spinnerX' : 'spinnerX' }"/>
+                <div class="slds-border_bottom">
+                    <div>                            
+                        <section role="log" class="slds-chat ">
+                            <ul>
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+                                        <span>
+                                            <div style=" font-size: 20px;">
+                                                <a href="" onclick="{!c.newwin}"><b>{!v.DMDetailList.flMessage.accountName}</b></a> - <strong>{!v.DMDetailList.directMssageSubject}</strong>
+                                            </div>
+                                            <span>                                        
+                                                <div class="slds-float_left">                                          
+                                                    From : <a><b>{!v.DMDetailList.directMessageFeed.initatedUser.userFirstName + ' '+v.DMDetailList.directMessageFeed.initatedUser.userLastName }</b></a>,<lightning:formattedDateTime value="{!v.DMDetailList.directMessageFeed.directMessageFeedCreatedDateTime}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                                                                                                                                                                                       minute="2-digit" hour12="true"/>
+                                                    
+                                                    <div>
+                                                        To: &nbsp;
+                                                        <aura:iteration items="{!v.DMDetailList.lstDirectMessageUsers}" var="user" indexVar="index" >
+                                                            <aura:if isTrue="{!user.userId != v.userIdValue}">
+                                                                <a>{!user.userFirstName + ' ' +user.userLastName}  <aura:if isTrue="{!!greaterthanorequal( !v.DMDetailList.lstDirectMessageUsers.length, !index )}">,</aura:if></a>
+                                                            </aura:if>
+                                                        </aura:iteration>
+                                                    </div>                                            
+                                                </div>
+                                            </span>   
+                                        </span>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                                        <div class="slds-float_right"> 
+                                            <lightning:input style="position:relative;" type="toggle" aura:id="{!v.DMDetailList.flMessage.feedId}"
+                                                             messageToggleActive="Marked" messageToggleInactive="Unmarked" checked= "{!v.DMDetailList.flMessage.marked}" 
+                                                             onchange="{!c.getToggleButtonValue}" value="{!v.DMDetailList.flMessage.marked}" >
+                                            </lightning:input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-scrollable_y slds-border_top" style="height:21rem;">
+                                    <aura:iteration items="{!v.DMDetailList.directMessageFeed.directFeedComments}" var="message" indexVar="array" >
+                                        <aura:if isTrue="{!message.commentedUserID == v.userIdValue}">
+                                            <li class="slds-chat-listitem slds-chat-listitem_outbound">
+                                                <div class="slds-chat-message">
+                                                    <div class="slds-chat-message__body">
+                                                        <div class="slds-chat-message__text slds-chat-message__text_outbound">
+                                                            <span><lightning:formattedRichText value="{!message.commentBody}"/></span>
+                                                        </div>
+                                                        <div class="slds-chat-message__meta" aria-label="said Andy Martinez at 4:59 PM">
+                                                            {!message.commentedUserFirstName} • {!message.commentedUserLastName} • <lightning:formattedDateTime value="{!message.commentCreatedDateTime}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                                                                                                                minute="2-digit" hour12="true"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </aura:if>
+                                        <aura:if isTrue="{!message.commentedUserID != v.userIdValue}">
+                                            <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                                                <div class="slds-chat-message">
+                                                    <div class="slds-chat-message__body">
+                                                        <div class="slds-chat-message__text slds-chat-message__text_inbound">
+                                                            <span><lightning:formattedRichText value="{!message.commentBody}"/></span>
+                                                        </div>
+                                                        <div class="slds-chat-message__meta" aria-label="said Andy Martinez at 4:59 PM">
+                                                            {!message.commentedUserFirstName} • {!message.commentedUserLastName} • <lightning:formattedDateTime value="{!message.commentCreatedDateTime}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                                                                                                                minute="2-digit" hour12="true"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </div>
+                            </ul>
+                        </section>        
+                    </div>
+                </div>
+                <br></br>
+                <div class="slds-col slds-size_12-of-12">
+                    <div class="slds-clearfix">
+                        <div class="slds-page-header" role="banner">
+                            <div class="slds-float_right">            
+                                <lightning:button disabled="{!v.DetailPageNumber == 1}" variant="brand" aura:id="prevPage" label="Prev" onclick="{!c.detailHandlePrev}" />            
+                                <lightning:button disabled="{!v.DetailPageNumber == v.DetailTotalPages}" aura:id="nextPage" variant="brand" label="Next" onclick="{!c.detailHandleNext}"/>
+                            </div>
+                            <p>{!v.DetailRecordStart}-{!v.DetailRecordEnd} of {!v.DetailTotalRecords} | Page {!v.DetailPageNumber} of {!v.DetailTotalPages}</p>
+                        </div>
+                    </div>
+                </div>
+                <br></br>
+                <div class=" slds-grid slds-gutters" >
+                    <div class="slds-col slds-size_10-of-12">
+                        <lightning:inputRichText value="{!v.replyValue}" variant="bottom-toolbar" aura:id="replyRichText" placeholder="Type something interesting" shareWithEntityId="{!v.recordId}">
+                            <lightning:insertImageButton/>
+                        </lightning:inputRichText>
+                    </div>
+                    <div class="slds-col slds-size_2-of-12">
+                        <span>
+                            <br></br><br></br><br></br><br></br><br></br><br></br>
+                            <lightning:button variant="Reply" label="Reply" class="slds-button slds-button_outline-brand " title="Reply" onclick="{!c.postComments}" />
+                        </span>
+                    </div>
+                </div>
+                <div class=" slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning:fileUpload label="Attachment"
+                                              name="fileUploader"
+                                              multiple="true"
+                                              accept="{!v.accept}"
+                                              onuploadfinished="{!c.handleUploadFinishedNew}"/>
+                        <div class="slds-text-body_small slds-text-color_error">{!v.fileName}</div>
+                    </div>
+                </div>
+            </span>
+        </div>
+    </div>
+    
+    <aura:if isTrue="{!v.isOpenNewMsg}">
+        <!--###### MODAL BOX Start######--> 
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Message</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height:30rem;">
+                    
+                    <!--<c:customLookup objectAPIName="Account" IconName="standard:account" selectedRecord="{!v.selectedAccountLookUpRecord}" label="Family"/>
+                    
+                    <c:customLookup objectAPIName="User" IconName="standard:user" selectedRecord="{!v.selectedUserLookUpRecords}" label="To"/>-->
+                    <c:reUsableMultiSelectLookup objectAPIName="Account"
+                                                 IconName="standard:account"
+                                                 lstSelectedRecords="{!v.selectedAccountLookUpRecords}"
+                                                 label="Family"/>
+                    
+                    <c:reUsableMultiSelectLookup objectAPIName="User"
+                                                 IconName="standard:account"
+                                                 lstSelectedRecords="{!v.selectedUserLookUpRecords}"
+                                                 label="To"/>
+                    
+                    <lightning:input name="input3" value="{!v.subjectValue}" placeholder="Type here..." label="Subject"/><br/>
+                    
+                    <label class="uiLabel-left form-element__label uiLabel" data-aura-class="uiLabel"><span class="" >Message</span></label>
+                    <lightning:inputRichText value="{!v.newMessageBody}" placeholder="Type something interesting" shareWithEntityId="{!v.recordId}"><lightning:insertImageButton/></lightning:inputRichText>
+                    <!-- <lightning:input name="file1" type="file" label="Attachment" multiple="true" accept="image/png, .zip" onchange="{! c.handleFilesChange }"/>   -->
+                    <lightning:fileUpload label="Attachment"
+                                          name="fileUploader"
+                                          multiple="true"
+                                          accept="{!v.filetype}"
+                                          recordId="{!v.recordId}"
+                                          onuploadfinished="{!c.handleUploadFinishedNew}" />
+                    <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div>
+                </div>
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand" 
+                                      label="Send"
+                                      title="Send"
+                                      onclick="{! c.sendFirstMessage}"/>
+                    <lightning:button variant="brand" 
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{!c.closeModel}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <!--###### MODAL BOX Part END Here ######-->
+    </aura:if>
+    
+    <!--Backup Advisor Modal Box-->
+    <aura:if isTrue="{!v.openBackupAgentModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Backup Advisors</h2>
+                </header>
+                <div class="slds-modal__content slds-var-p-around_xx-large" id="modal-content-id-1">
+                    <lightning:input name="input1" label="Select Advisors to Backup" placeholder="Search Advisors.." required="true"/>
+                    <p><lightning:pillContainer items="{!v.items}"></lightning:pillContainer></p>
+                </div>
+                
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}">Cancel</button>
+                    <button class="slds-button slds-button_brand">Save</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+</aura:component>

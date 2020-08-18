@@ -1,0 +1,25 @@
+<!-- Developed by Vamsi on 2020-07-07 -->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+access="global"  >
+    
+    <!--  Custom tabs-->
+    <div>
+        <lightning:tabset selectedTabId="myMsgId" variant="scoped">
+            <lightning:tab label="My Messages" id="myMsgId" class="">
+                <div class="slds-p-around_xx-small slds-theme_default">
+                    <c:NewPOCAgentView titleName="My Messages"></c:NewPOCAgentView>
+                </div>
+            </lightning:tab>
+            <lightning:tab label="Advisor 2" id="adv2">
+                <div class="slds-p-around_xx-small slds-theme_default">
+                     <c:AdvisorAgentView titleName="Advisor 2"></c:AdvisorAgentView>
+                </div>
+            </lightning:tab>
+            <lightning:tab label="Advisor 3" id="adv3">
+                <div class="slds-p-around_xx-small slds-theme_default">
+                     <c:AdvisorAgentView titleName="Advisor 3"></c:AdvisorAgentView>
+                </div>
+            </lightning:tab>
+        </lightning:tabset>
+    </div>
+</aura:component>

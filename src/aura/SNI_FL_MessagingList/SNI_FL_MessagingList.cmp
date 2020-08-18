@@ -1,0 +1,57 @@
+<!-- 
+Component Name    : MSG_MessagingList
+Description       : Component which holds the messaging list
+Created By        : Sameera De Silva	
+Created Date      : 8/12/2020
+
+Modification Log: 
+Developer                   Date                   Description
+Sameera De Silva		8/12/2020				Created base structure of messaging list
+-->
+
+<aura:component controller="SNI_FL_DirectMessageUtil" access="global" >
+	
+    <aura:attribute name="isConnectAPI" type="Boolean" />
+    <aura:attribute name="directMsgWrapper" type="List" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"></aura:handler>
+    
+        <div class="scrollerContainer slds-scrollable" style="{!v.isConnectAPI == true ? 'height:38.5rem;' : 'height:30rem'}" onscroll="{!c.getMoreData}">
+            
+            <div class="scroller  uiScroller scroller-wrapper scroll-vertical native " tabindex="-1" style="" data-aura-rendered-by="63:437;a" data-aura-class="uiScroller">
+               
+                <div class="scroller ">
+                    
+                    <aura:iteration items="{!v.directMsgWrapper}" var="item" indexVar="index" >
+                        
+                        <li class="slds-vertical-tabs__nav-item border-class " 
+                            title="{!item.directMessageFeed.directFeedComments[0].hovercomments}" aura:id="vertical-tab" role="presentation"  
+                            onclick="{!c.getSelectedRecord}" data-feed-id="{!item.feedId}" 
+                            data-id="{!index}" data-feedelement-id="{!item.directMessageFeed.directMessageFeedID}" escape="false">
+                            
+                            <a class="slds-vertical-tabs__link" href="javascript:void(0)" role="tab" tabindex="0" aria-selected="true" aria-controls="slds-vertical-tabs-0" 
+                               id="slds-vertical-tabs-0__nav" style="text-decoration:none;">
+                                
+                                <span class="slds-truncate " title="{!item.directMessageFeed.directFeedComments[0].hovercomments}" style="color: #333; margin-left: 0.2rem;">
+                                    <p>Family: <a><b>{!item.flMessage.accountName}</b></a> </p>
+                                    <p>From: <a><b>{!item.directMessageFeed.initatedUser.userFirstName +' '+item.directMessageFeed.initatedUser.userLastName}</b></a> </p>
+                                    {!item.directMssageSubject}<aura:if isTrue="{!empty(item.directMssageSubject)}">No Subject:</aura:if>
+                                </span>
+                                
+                            </a>
+                            
+                            <aura:if isTrue="{!item.flMessage.marked}">
+                                <lightning:icon  iconName="action:priority" alternativeText="priority" title="priority" size="small" class="colour "/>
+                            </aura:if>
+                            
+                        </li>
+                        
+                    </aura:iteration>
+                    
+                </div>    
+                
+            </div>
+           
+        </div>
+    
+    
+</aura:component>

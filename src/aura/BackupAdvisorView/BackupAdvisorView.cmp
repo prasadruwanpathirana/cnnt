@@ -1,0 +1,31 @@
+<aura:component controller="DirectMessageUtil" access="global" >
+    
+    <aura:attribute name="openBackupAgentModal" type="Boolean"/>
+    <aura:attribute name="selectedUserLookUpRecords" type="sObject" default="{}"/>
+    
+     <aura:if isTrue="{!v.openBackupAgentModal}">
+     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Backup Advisors</h2>
+                </header>
+                <div class="slds-modal__content slds-var-p-around_xx-large" id="modal-content-id-1">
+                    <!--<lightning:input name="input1" label="Select Advisors to Backup" placeholder="Search Advisors.." required="true"/>
+                    <p><lightning:pillContainer items="{!v.items}"></lightning:pillContainer></p>-->
+                    <c:reUsableMultiSelectLookup objectAPIName="User"
+                               IconName="standard:account"
+                               lstSelectedRecords="{!v.selectedUserLookUpRecords}"
+                               label="Select Advisors to Backup"/>
+                </div>
+                
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}">Cancel</button>
+                    <button class="slds-button slds-button_brand">Save</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+	
+</aura:component>

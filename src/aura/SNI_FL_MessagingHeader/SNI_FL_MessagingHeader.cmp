@@ -1,0 +1,94 @@
+<!-- 
+Component Name    : MSG_MessasgingHeader
+Description       : Messaging header component
+Created By        : Sameera De Silva
+Created Date      : 8/11/2020
+
+Modification Log: 
+
+Developer                   Date                   Description
+1.Sameera De Silva			8/11/2020		Created Messagin header base structure
+-->
+
+<aura:component controller="SNI_FL_DirectMessageUtil" access="global">
+	
+	<!-- aura attributes -->
+	<aura:attribute name="isOpenNewMsg" type="boolean" default="false" />
+	<aura:attribute name="titleName" type="String" />
+    <!-- end aura attributes -->
+    
+	<div class="slds-grid slds-wrap">
+        
+		<div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-12 slds-large-size_2-of-12">
+                
+            	<lightning:icon iconName="custom:custom23" alternativeText="user" title="user" size="x-large" class="image"/>
+                <b>&nbsp;&nbsp;{!v.titleName}</b>
+           
+        </div>
+        
+		<div class="slds-col slds-size_1-of-1 slds-medium-size_3-of-12 slds-large-size_6-of-12"> 
+            <span>               
+            </span> 
+        </div>
+        
+		<div class="slds-col slds-size_1-of-1 slds-medium-size_7-of-12 slds-large-size_4-of-12 btnactions"> 
+            
+            
+            <!--<div class="slds-form-element selectStyle">
+                   <label class="slds-form-element__label">
+                       <span class="txt" >
+                           Filter
+                        </span> 
+                    </label>
+                    <div class="slds-form-element__control slds-grow" style="display: inline-block;">
+                        <div class="slds-select_container">
+                            <select class="slds-select" id="selectItem" name="selectItem" style="" onchange="{!c.selectFilterOption}">
+                                <option value="All">All</option>
+                                <option value="Marked">Marked</option>
+                                <option value="Unmarked">Unmarked</option>
+                            </select>
+                        </div>
+                    </div>
+            </div> &nbsp;&nbsp;
+            <div class="slds-form-element slds-form-element_horizontal">
+                <label class="slds-form-element__label" for="horizontal-input-id-01">Text Input</label>
+            	<lightning:combobox name="progress" id="horizontal-input-id-01" value="inProgress" placeholder="Select Progress" options="{! v.filterOptions }" onchange="{! c.selectFilterOption }"/>
+               	<lightning:button label="New Message" title="New Messages" onclick="{! c.createNewMessage }" />
+                <lightning:button label="Backup Advisors" title="Backup Advisors" onclick="{! c.openBackupAdvisorModal }" class="backupAgentbtn" />
+            </div>-->
+            
+            <div class="slds-grid slds-wrap">
+                
+            	<div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-6 slds-large-size_2-of-6">
+                	
+                    <div class="slds-form-element selectStyle">
+                       <label class="slds-form-element__label">
+                           <span class="txt" >
+                               Filter
+                            </span> 
+                        </label>
+                        <div class="slds-form-element__control slds-grow" style="display: inline-block;">
+                            <div class="slds-select_container">
+                                <select class="slds-select" id="selectItem" name="selectItem" style="" onchange="{!c.selectFilterOption}">
+                                    <option value="All">All</option>
+                                    <option value="Marked">Marked</option>
+                                    <option value="Unmarked">Unmarked</option>
+                                </select>
+                            </div>
+                        </div>
+            		</div> &nbsp;&nbsp;
+                    
+              	</div>
+                
+              	<div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-6 slds-large-size_4-of-6">
+                	<lightning:button label="New Message" title="New Messages" onclick="{! c.createNewMessage }"/>
+                	<lightning:button label="Backup Advisors" title="Backup Advisors" onclick="{! c.openBackupAdvisorModal }"/>
+              	</div>
+                
+            </div>
+           
+            
+		</div>
+	</div>
+
+</aura:component>

@@ -1,0 +1,25 @@
+.THIS .image svg {
+    fill : white;
+}
+
+.THIS .image {
+    background-color:#2BAB27 !important;
+}
+
+/*.THIS .selectStyle{
+    display: inline-block;
+}*/
+
+@media all and (max-width: 768px) {
+
+  .THIS .btnactions{
+        margin-top: 10px;
+    }
+}
+
+@media all and (max-width:454px){
+    .THIS .backupAgentbtn{
+        margin-top: 10px;
+        margin-left: 250px;
+    }
+}

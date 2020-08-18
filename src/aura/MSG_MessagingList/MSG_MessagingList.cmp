@@ -1,0 +1,100 @@
+<!-- 
+Component Name    : MSG_MessagingList
+Description       : Component which holds the messaging list
+Created By        : Pavitha
+Created Date      : 04-08-2020
+
+Modification Log: 
+Developer                   Date                   Description
+Sameera De Silva		8/11/2020				Added "previousePageToken","nextPageToken",
+												"isValuesAvailable","isNextDisabled","isPreviousDisabled" attributes
+-->
+
+<aura:component  controller="MSGDirectMessageUtil" access="global" >
+    
+    <!-- aura attributes -->
+    <aura:attribute name="directMsgWrapper" type="MSGDirectMessageWrapper[]" />
+    <aura:attribute name="selectedFeedIdValue" type="String"/>
+    <aura:attribute name="selectedMsgWrapper" type="MSGDirectMessageWrapper" />
+    <aura:attribute name="replyValue" type="String"/>
+    <aura:attribute name="isSpinnerHide" type="Boolean" default="true" />
+    
+    <aura:attribute name="isConnectAPI" type="Boolean" />
+    <aura:attribute name="PageNumber" type="integer" default="1"/>
+    <aura:attribute name="TotalPages" type="integer" default="0"/>
+    <aura:attribute name="RecordStart" type="integer" default="0"/>
+    <aura:attribute name="RecordEnd" type="integer" default="0"/>
+    <aura:attribute name="TotalRecords" type="integer" default="0"/>
+    <aura:attribute name="FeedIDValue" type="Id"/>
+    <aura:attribute name="DetailPageNumber" type="integer" default="1"/>
+    
+    <!--Sameera-->
+    <aura:attribute name="previousePageToken" type="String"></aura:attribute>
+    <aura:attribute name="nextPageToken" type="String"></aura:attribute> 
+    <aura:attribute name="isValuesAvailable" type="Boolean"></aura:attribute>
+    <aura:attribute name="isNextDisabled" type="Boolean"></aura:attribute>
+    <aura:attribute name="isPreviousDisabled" type="Boolean"></aura:attribute>
+    
+    
+    <!-- end aura attributes -->
+
+    <span>
+        <div class="scrollerContainer slds-scrollable" style="{!v.isConnectAPI == true ? 'height:43rem;' : 'height:30rem'}" onscroll="{!c.getMoreData}">
+            <div class="scroller  uiScroller scroller-wrapper scroll-vertical native " tabindex="-1" style="" data-aura-rendered-by="63:437;a" data-aura-class="uiScroller">
+                <div class="scroller ">
+                    <aura:iteration items="{!v.directMsgWrapper}" var="item" indexVar="index" ><!--Updated by sameera-->
+                        <li class="slds-vertical-tabs__nav-item border-class " 
+                            title="{!item.directMessageFeed.directFeedComments[0].hovercomments}" aura:id="vertical-tab" role="presentation"  
+                            onclick="{!c.getSelectedRecord}" data-feed-id="{!item.feedId}" 
+                            data-id="{!index}" data-feedelement-id="{!item.directMessageFeed.directMessageFeedID}" escape="false"><!--Updated by sameera-->
+                            <a class="slds-vertical-tabs__link" href="javascript:void(0)" role="tab" tabindex="0" aria-selected="true" aria-controls="slds-vertical-tabs-0" 
+                               id="slds-vertical-tabs-0__nav" style="text-decoration:none;">
+                                <span class="slds-truncate " title="{!item.directMessageFeed.directFeedComments[0].hovercomments}" style="color: #333; margin-left: 0.2rem;">
+                                    <p>Family: <a><b>{!item.flMessage.accountName}</b></a> </p>
+                                    <p>From: <a><b>{!item.directMessageFeed.initatedUser.userFirstName +' '+item.directMessageFeed.initatedUser.userLastName}</b></a> </p>
+                                    <!--    To: -->
+                                    <!--   <aura:iteration items="{!item.lstDirectMessageUsers}" var="user" indexVar="index" > -->
+                                    <!--      <aura:if isTrue="{!user.userId != v.userIdValue}"> -->
+                                    <!-- {!user.userFirstName + ' ' +user.userLastName}<aura:if isTrue="{!notequals(add(index,1),sub(item.lstDirectMessageUsers.length,1))}">,</aura:if>-->
+                                    <!--        {!user.userFirstName + ' ' +user.userLastName }  <aura:if isTrue="{!!greaterthanorequal( !v.selectedMsgWrapper.lstDirectMessageUsers.length, !index )}">,</aura:if>-->
+                                    
+                                    <!-- <a>{!}<aura:if isTrue="{!notequals(if(equals(index,0),add(index,1),index),sub(item.actorDetail.length,1))}">,&nbsp;</aura:if></a>-->
+                                    <!--     </aura:if> -->
+                                    <!--    </aura:iteration><br/> -->
+                                    {!item.directMssageSubject}<aura:if isTrue="{!empty(item.directMssageSubject)}">No Subject:</aura:if>
+                                </span>
+                            </a>
+                            <aura:if isTrue="{!item.flMessage.marked}">
+                                <lightning:icon  iconName="action:priority" alternativeText="priority" title="priority" size="small" class="colour "/>
+                            </aura:if>
+                        </li>
+                    </aura:iteration>
+                    <!--Sameera-->
+                    <aura:if isTrue="{!v.isValuesAvailable}">
+                        <div class="slds-grid slds-wrap slds-m-top_xx-small">
+                           <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_8-of-12">
+                               <lightning:button variant="brand" label="Prev" value="{!v.previousePageToken}" aura:id="Previous" title="Brand action" disabled="{!v.isPreviousDisabled}" onclick="{! c.getPreviousePage }" />
+                           </div>
+                           <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_4-of-12">
+                                <lightning:button variant="brand" label="Next" title="Brand action" aura:id="Next" value="{!v.nextPageToken}" onclick="{! c.getNextPages }" disabled="{!v.isNextDisabled}"/>
+                           </div>
+                        </div>
+                     </aura:if>
+                </div>                                
+            </div>
+           
+        </div>
+         <aura:if isTrue="{!!v.isConnectAPI}">
+        <div class="slds-clearfix">
+                    <div class="slds-page-header" role="banner">
+                        <div class="slds-float_right">            
+                            <lightning:button disabled="{!v.PageNumber == 1}" variant="brand" aura:id="prevPage" label="Prev" onclick="{!c.handlePrev}" />            
+                            <lightning:button disabled="{!v.PageNumber == v.TotalPages}" aura:id="nextPage" variant="brand" label="Next" onclick="{!c.handleNext}"/>
+                        </div>
+                        <p>{!v.RecordStart}-{!v.RecordEnd} of {!v.TotalRecords} | Page {!v.PageNumber} of {!v.TotalPages}</p>
+                    </div>
+                </div>
+        </aura:if>
+    </span>
+     
+</aura:component>

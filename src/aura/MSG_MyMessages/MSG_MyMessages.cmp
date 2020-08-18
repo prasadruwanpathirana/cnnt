@@ -1,0 +1,51 @@
+<!-- 
+Component Name    : MSG_MyMessages
+Description       : Tabset which holds the components
+Created By        : Vamsi
+Created Date      : 2020-07-07
+
+Modification Log: 
+Developer                   Date                   Description
+-->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+access="global"  >
+    
+    <aura:handler name="componentEventFired" event="c:MSG_BackupAdvisorEvt" action="{!c.handleEvent}"></aura:handler>
+    <aura:attribute name="openBackupAgentModal" type="Boolean" />
+    <aura:attribute name="moretabs" type="Aura.Component[]" />
+    <aura:attribute name="agentDetails" type="Object" default="{'name' : 'test'}" />
+    <aura:attribute name="myMap" type="Map" />
+    
+    <!--  Custom tabs-->
+    <div>
+        <lightning:tabset selectedTabId="myMsgId" variant="scoped">
+            <lightning:tab label="My Messages" id="myMsgId" class="">
+                <div class="slds-p-around_xx-small slds-theme_default">
+                    <c:MSG_NewPOCAgentView openBackupAgentModal="{!v.openBackupAgentModal}" isConnectAPI="true" titleName="My Messages" />
+                </div>
+            </lightning:tab>
+             
+             <aura:iteration items="{!v.moretabs}" var="obj">
+<!--<lightning:tab label="" id="adv3">
+                <div class="slds-p-around_xx-small slds-theme_default">
+                     {!v.body}
+                </div>
+            </lightning:tab> -->
+                 {!obj}
+    </aura:iteration>
+             
+             
+        
+      
+
+         <!--   <lightning:tab label="Advisor 3" id="adv3">
+                <div class="slds-p-around_xx-small slds-theme_default">
+                     <c:MSG_NewPOCAgentView isConnectAPI="false" titleName="Advisor 3" />
+                </div>
+            </lightning:tab> -->
+        </lightning:tabset>
+        
+        {!v.horizontalTabs}
+        
+    </div>
+</aura:component>

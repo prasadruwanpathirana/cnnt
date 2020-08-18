@@ -1,0 +1,91 @@
+<!-- 
+Component Name    : MSG_CommonMessagingView
+Description       : Component which holds current messages
+Created By        : Sameera De Silva
+Created Date      : 8/12/2020
+
+Modification Log: 
+
+Developer                   Date                   Description
+1.Sameera De Silva			8/12/2020			Created base component for Common Messaging View
+-->
+
+<aura:component controller="SNI_FL_DirectMessageUtil" access="global" >
+	
+    <aura:attribute name="isConnectAPI" type="Boolean" default="false" />
+    <aura:attribute name="replyValue" type="String" />
+    <aura:attribute name="FeedCreatedDateTime" type="DateTime" default="2020-07-20T09:57:05.000Z"></aura:attribute>
+    
+    <div class="slds-border_bottom" >
+        <div class="">                            
+            <section role="log" class="slds-chat ">
+                <ul class="">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+                            <span>
+                                <div style=" font-size: 20px;">
+                                    <a href=""><b>Test</b></a> - <strong>Test</strong>
+                                </div>
+                                <span>                                        
+                                    <div class="slds-float_left">                                          
+                                        From : <a><b>Test</b></a>,<lightning:formattedDateTime value="{!v.FeedCreatedDateTime}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                                        <div>
+                                            To: Test &nbsp;
+                                            
+                                        </div>                                            
+                                    </div>
+                                </span> </span>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                            <div class="slds-float_right">
+                                <lightning:input style="position:relative;" type="toggle" messageToggleActive="Flagged" messageToggleInactive="UnFlagged" checked="true" onchange="{!c.getToggleButtonValue}"> </lightning:input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-scrollable_y slds-border_top" style="height:21rem;">
+                        <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                            <div class="slds-chat-message">
+                                <div class="slds-chat-message__body">
+                                    <div class="slds-chat-message__text slds-chat-message__text_inbound"> <span><lightning:formattedRichText value="Test"/></span> </div>
+                                    <div class="slds-chat-message__meta" aria-label="said Andy Martinez at 4:59 PM"> Test
+                                        <lightning:formattedDateTime value="{!v.FeedCreatedDateTime}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true" /> 
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </ul>
+            </section>
+        </div>
+    </div>
+    
+    <!--<div class="slds-grid slds-gutters  slds-wrap">
+        
+        <div class="slds-col slds-size_1-of-1 slds-size_10-of-12">
+            <lightning:inputRichText value="{!v.replyValue}" variant="bottom-toolbar" aura:id="replyRichText" placeholder="Type something interesting" shareWithEntityId="{!v.recordId}">
+                <lightning:insertImageButton/></lightning:inputRichText>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-1 slds-size_2-of-12"> 
+
+            
+             <lightning:button variant="Reply" label="Reply" class="slds-button slds-button_outline-brand " title="Reply" />                            
+
+        </div>
+    </div>-->
+    <div class="slds-grid slds-wrap">
+      <div class="slds-col slds-size_1-of-1 slds-medium-size_3-of-4 slds-large-size_10-of-12">
+        	<div class="slds-p-around_small">
+          		<lightning:inputRichText value="{!v.replyValue}" variant="bottom-toolbar" aura:id="replyRichText" placeholder="Type something interesting" shareWithEntityId="{!v.recordId}" >
+                	<lightning:insertImageButton/>
+          		</lightning:inputRichText>
+          	</div>	
+      </div>
+      <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4 slds-large-size_2-of-12" >
+          <div class="btnReply">
+          	<lightning:button variant="Reply" label="Reply" class="slds-button slds-button_outline-brand " title="Reply" />  
+          </div>
+      </div>
+</div>
+  
+</aura:component>

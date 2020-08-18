@@ -1,0 +1,56 @@
+<aura:component controller="DirectMessageUtil" access="global" >
+    
+    <aura:attribute name="isOpenNewMsg" type="boolean" default="false"/>
+    <aura:attribute name="titleName" type="String"/>
+    <aura:attribute name="openBackupAgentModal" type="Boolean"/>
+    <aura:attribute name="directMsgWrapper" type="DirectMessageWrapper[]"></aura:attribute><!--Added by sameera-->
+    
+     <aura:attribute name="markDirectMsgWrapper" type="DirectMessageWrapper[]"/>
+    <aura:attribute name="unMarkedDirectMsgWrapper" type="DirectMessageWrapper[]"/>
+    <aura:attribute name="allDirectMsgWrapper" type="DirectMessageWrapper[]"/>
+    <aura:attribute name="FullDirectMsgWrapper" type="DirectMessageWrapper[]"/>
+    
+     <div>
+            <span>
+                <lightning:icon iconName="custom:custom23" alternativeText="user" title="user" size="x-large" class="image"/>
+                <b>&nbsp;&nbsp;{!v.titleName}</b>
+            </span>
+        </div>
+        <div><span></span></div><div><span></span></div><div><span></span></div>
+        <div class="slds-col_bump-left">
+          <!--   <span> 
+                <lightning:select  name="selectItem" onchange="{!c.doSomething}" >
+                    <option value="">All</option>
+                    <option value="1">Marked</option>
+                    <option value="2">Unmarked</option>
+                </lightning:select>
+            </span> -->
+           <span data-aura-rendered-by="335:0">
+                <div class="slds-form-element selectStyle" data-aura-rendered-by="344:0">
+                    <label class="slds-form-element__label" for="336:0" data-aura-rendered-by="345:0">
+                       <span class="" data-aura-rendered-by="347:0">
+                           Filter
+                       </span>
+                    </label>
+                   <div class="slds-form-element__control slds-grow" style="display: inline-block;">
+                        <div class="slds-select_container" >
+                            <select class="slds-select" id="selectItem"  name="selectItem" style="" onchange="{!c.selectFilterOption}">
+                                <option value="All">All</option>
+                                <option value="Marked" >Marked</option>
+                                <option value="Unmarked" >Unmarked</option>
+                            </select> 
+                        </div>
+                    </div>
+                </div>
+            </span> 
+        </div>
+         <div>&nbsp;&nbsp;</div>
+        
+        <div >
+            <span >
+                <lightning:button label="New Message" title="New Messages" onclick="{! c.createNewMessage }"/>&nbsp;
+                <lightning:button label="Backup Advisors" title="Backup Advisors" onclick="{! c.openBackupAdvisorModal }"/>
+            </span>
+        </div>
+	
+</aura:component>

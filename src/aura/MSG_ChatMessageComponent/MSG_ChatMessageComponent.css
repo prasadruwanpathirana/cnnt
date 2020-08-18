@@ -1,0 +1,58 @@
+/****************/
+
+.THIS.head{
+    
+    height: 7rem;
+    background:rgb(236, 235, 234);
+}
+.THIS .head-internal{
+    width: 20rem;
+    height: 5rem;
+}
+.THIS .head-internal-p{
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-left: 2rem;
+    margin-top: 2.5rem; 
+}
+
+/***************************/
+.THIS{}
+.THIS .slds-background-definition {
+    background: white;
+    border: solid 1px;
+}
+.THIS .border-class{
+    border: solid .5px #d4d4d4;
+    height: 5rem;
+}
+.THIS .current{
+    background:white;
+    border-left: solid;
+    border-width: 0 0 0 5px;
+    border-left-color: #2574a9;
+    height: 5rem;
+}
+.THIS a:hover {
+  background-color: transparent !important;
+}
+.THIS .reply-textbox-style{
+    position: sticky;
+    bottom: 0rem;
+    width:100%;
+    top:34rem;
+}
+.THIS .button-style{
+    align-items: right;
+    margin-left: 12rem;
+    margin-top: -2.0rem;
+}
+.THIS .button-position{
+    margin-left: 1rem;
+}
+.THIS .slds-combobox__input{
+    display: none;
+}
+.THIS .slds-rich-text-editor__select{
+    display: none;
+}

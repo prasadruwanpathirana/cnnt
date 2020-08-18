@@ -1,0 +1,45 @@
+<!-- 
+Component Name    : MSG_AgentView
+Description       : Main messaging view which holds the sub components
+Created By        : Sameera De Silva
+Created Date      : 8/11/2020
+
+Modification Log:
+ 
+Developer                   Date                   Description
+1.Sameera De Silva			8/11/2020			Created the skeleton structure(UI) of the main messaging view
+-->
+
+
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" controller="SNI_FL_DirectMessageUtil" access="global">
+	
+    <aura:attribute name="isConnectAPI" type="Boolean" default="true" />
+    <aura:attribute name="titleName" type="String" default="My Messages"/>
+    <aura:handler name="init" value="this" action="{!c.doInit}" />
+
+    
+    <div class="slds-box" >
+        
+		<c:SNI_FL_MessagingHeader isOpenNewMsg="{!v.isOpenNewMsg}" titleName="{!v.titleName}"/>
+        
+	</div>
+    
+	<div class="slds-p-bottom_x-small"></div>
+    
+	<div class="slds-grid slds-wrap"> 
+        
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4 slds-large-size_4-of-12 slds-theme_shade">
+            
+        	<c:SNI_FL_MessagingList isConnectAPI="{!v.isConnectAPI}"/>
+            
+        </div>
+        
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_3-of-4 slds-large-size_8-of-12 slds-theme_default">
+            
+        	<c:SNI_FL_CommonMessagingView isConnectAPI="{!v.isConnectAPI}"/>
+            
+        </div>
+		
+	</div>
+
+</aura:component>

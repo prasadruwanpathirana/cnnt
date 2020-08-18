@@ -1,0 +1,4 @@
+<aura:component >
+ 	<aura:attribute name="commentBody" type="string"></aura:attribute>
+{!v.commentBody}
+</aura:component>

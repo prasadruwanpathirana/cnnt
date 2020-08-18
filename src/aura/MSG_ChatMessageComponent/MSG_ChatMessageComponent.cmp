@@ -1,0 +1,225 @@
+<!-- 
+Component Name    : MSG_ChatMessageComponent
+Description    : 
+Created By        : Vamsi
+Created Date      : 08-06-2020
+
+Modification Log: 
+Developer                   Date                   Description
+-->
+
+
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                controller="MSGDirectMessageUtil" access="global" >
+    
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    <aura:attribute name="directMsgWrapper" type="MSGDirectMessageWrapper[]"></aura:attribute>
+    <aura:attribute name="selectedMsgWrapper" type="MSGDirectMessageWrapper"></aura:attribute>
+    <aura:attribute name="isOpenNewMsg" type="boolean" default="false"/>
+    <aura:attribute name="selectedAccountLookUpRecords" type="sObject" default="{}"/>
+    <aura:attribute name="selectedUserLookUpRecords" type="sObject" default="{}"/>
+    <aura:attribute name="newMessageBody" type="String"/>
+    <aura:attribute name="subjectValue" type="String"/>
+    <aura:attribute name="replyValue" type="String"/>
+    <aura:attribute name="userIdValue" type="String"/>
+    <aura:attribute name="selectedFeedIdValue" type="String"/>
+    <aura:attribute Name="selItem" type="object"  access="public" />
+    <aura:attribute name="feedElementID" type="String"/>
+    <aura:attribute name="titleName" type="String"/>
+    <aura:attribute name="loaded" type="Boolean" default="true" />
+    <aura:attribute name="idX" type="String" />
+    <aura:attribute name="attachId" type="String"></aura:attribute>
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="accept" type="List" default="['.pdf', '.zip','.txt']"/>
+    <aura:attribute name="multiple" type="Boolean" default="true"/>
+    <aura:method name="parentMethod" action="{!c.doInit}"/>
+    
+    
+    <div class="" >
+        <div class="slds-grid slds-wrap" >            
+            <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12 slds-scrollable"  >
+                <span>
+                    <div class="inboxHeader">
+                        <div class="slds-grid slds-grid--vertical-stretch slds-box header-box forceChatterMessagesListViewHeader"  style="border-radius: 0;height: 6rem;">
+                            <div class="slds-col slds-align-middle slds-size--1-of-2" >
+                                <span class="inboxTitle uiOutputText"  data-aura-class="uiOutputText">
+                                    <h1>Messages</h1> 
+                                </span>
+                            </div>
+                            <div class="slds-col slds-align-middle slds-size--1-of-2 slds-grid--align-end newMessageButtonContainer" >
+                                <button class="slds-button slds-button--neutral slds-float--right newMessageButton uiButton--default uiButton--brand uiButton" aria-live="off" type="button" data-aura-rendered-by="17:437;a" data-aura-class="uiButton--default uiButton--brand uiButton"
+                                        style="background-color: #2574a9;border-color: #2574a9;color: #ffffff;" onclick="{!c.createNewMessage}">                                    
+                                    <span class=" label bBody" dir="ltr" >New</span>                                    
+                                </button>
+                                <br/><br/>
+                            </div>
+                            <br/>
+                        </div>
+                        <div class="scrollerContainer slds-scrollable" style="height:30rem;"> <!--Chat List-->
+                                <div class="scroller">
+                                    <aura:iteration items="{!v.directMsgWrapper}" var="item" indexVar="index" >
+                                        <li class="slds-vertical-tabs__nav-item border-class" title="{!item.directMessageFeed.directFeedComments[0].hovercomments.selectedMsgWrapper.lstDirectMessageUsers}" aura:id="vertical-tab" role="presentation"  
+                                            onclick="{!c.getSelectedTheme}" 
+                                            data-id="{!index}" data-feedelement-id="{!item.directMessageFeed.directMessageFeedID}">
+                                            <a class="slds-vertical-tabs__link" style="text-decoration:none;">
+                                                
+                                                    <lightning:icon iconName="action:user" alternativeText="user" title="user" size="x-small"/>
+                                                <span class="slds-truncate " title="{!item.directMessageFeed.directFeedComments[0].hovercomments.selectedMsgWrapper.lstDirectMessageUsers}" style="color: #333; margin-left: 0.2rem;">
+                                                    <p><a><b>{!item.flMessage.accountName}</b></a> </p>
+                                                    <p><a><b>{!item.directMessageFeed.user.userFirstName+' '+item.directMessageFeed.user.userLastName}</b></a> </p>
+                                                    {!item.directMssageSubject}<aura:if isTrue="{!empty(item.directMssageSubject)}">No Subject:</aura:if>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </aura:iteration>
+                                </div> 
+                        </div>
+                    </div>
+                </span>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12 slds-scrollable" > <!--Msg Feed-->
+                <span>
+                    <div class="detailViewHeader" >
+                        <div class="slds-grid slds-wrap slds-grid--vertical-stretch slds-box header-box forceChatterMessageDetailViewHeader" 
+                             data-aura-rendered-by="79:437;a" data-aura-class="forceChatterMessageDetailViewHeader" 
+                             style="border-radius: 0;height: 6rem;">
+                            <div class="slds-col slds-has-flexi-truncate" >
+                                <div class="slds-text-align_center">
+                                    <span>
+                                        <lightning:formattedDateTime value="{!v.selectedMsgWrapper.directMessageFeed.directMessageFeedCreatedDateTime}" year="numeric" month="numeric" day="numeric" hour="2-digit" minute="2-digit" hour12="true"/>
+                                        <br/><lightning:icon iconName="action:user" alternativeText="user" title="user" size="xx-small"/>
+                                        <div style=" font-size: 20px;">
+                                            <a href="" onclick="{!c.newwin}">{!v.selectedMsgWrapper.flMessage.accountName}</a> - {!v.selectedMsgWrapper.directMssageSubject}
+                                        </div>
+                                        <span>                                             
+                                            <div class="slds-float_left">
+                                                <div>
+                                                    <aura:iteration items="{!v.selectedMsgWrapper.lstDirectMessageUsers}" var="user" indexVar="index" >
+                                                        <aura:if isTrue="{!user.userId != v.userIdValue}">                                                       
+                                                            
+                                                            <a>{!user.userFirstName + ' ' +user.userLastName}  <aura:if isTrue="{!!greaterthanorequal( !v.selectedMsgWrapper.lstDirectMessageUsers.length, !index )}">,</aura:if></a>
+                                                        </aura:if>
+                                                    </aura:iteration>
+                                                </div>                                            
+                                            </div>
+                                        </span> 
+                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </span>
+                <span>
+                    <div class="slds-scrollable" style="height:30rem;">
+                        <div class="slds-text-longform">                            
+                            <section role="log" class="slds-chat">
+                                <ul class="slds-chat-list">                                
+                                    <aura:iteration items="{!v.selectedMsgWrapper.directMessageFeed.directFeedComments}" var="message" indexVar="array" >
+                                        <aura:if isTrue="{!message.receiverId == v.userIdValue}">
+                                            <li class="slds-chat-listitem slds-chat-listitem_outbound">
+                                                <div class="slds-chat-message">
+                                                    <div class="slds-chat-message__body">
+                                                        <div class="slds-chat-message__text slds-chat-message__text_outbound">
+                                                            <span><lightning:formattedRichText value="{!message.commentBody}"/></span>
+                                                        </div>
+                                                        <div class="slds-chat-message__meta" aria-label="said Andy Martinez at 4:59 PM">
+                                                            {!message.commentedUserFirstName} • {!message.commentedUserLastName} • <lightning:formattedDateTime value="{!message.commentCreatedDateTime}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                                                                                                                minute="2-digit" hour12="true"/>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </aura:if>
+                                        <aura:if isTrue="{!message.commentedUserID != v.userIdValue}">
+                                            <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                                                <div class="slds-chat-message">
+                                                    <div class="slds-chat-message__body">
+                                                        <div class="slds-chat-message__text slds-chat-message__text_inbound">
+                                                            <span><lightning:formattedRichText value="{!message.commentBody}"/></span>
+                                                        </div>
+                                                        <div class="slds-chat-message__meta" aria-label="said Andy Martinez at 4:59 PM">
+                                                            {!message.commentedUserFirstName} • {!message.commentedUserLastName} • <lightning:formattedDateTime value="{!message.commentCreatedDateTime}" year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                                                                                                                                                minute="2-digit" hour12="true"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </ul>
+                            </section>
+                        </div>
+                        <div class="reply-textbox-style slds-scrollable">
+                            <div >
+                                <lightning:inputRichText value="{!v.replyValue}" variant="bottom-toolbar" aura:id="replyRichText" 
+                                                         placeholder="Type something interesting" shareWithEntityId="{!v.recordId}">
+                                    <lightning:insertImageButton/></lightning:inputRichText>
+                                
+                                <!--2020-07-06-->
+                                <lightning:fileUpload label="Attachment"
+                                                      name="fileUploader"
+                                                      multiple="true"
+                                                      accept="{!v.accept}"
+                                                      onuploadfinished="{!c.handleUploadFinishedNew}" /> 
+                                <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div>
+                                <lightning:button variant="Reply" label="Reply" class="slds-button slds-button_outline-brand slds-float_right" title="Reply" onclick="{!c.postComments}" />                          
+                                <div style="visibility: hidden">{!c.doSave}</div>
+                            </div> 
+                        </div>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <aura:if isTrue="{!v.isOpen}">
+        <!--###### MODAL BOX Start######--> 
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Message</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height:30rem;">
+                    
+                    
+                    <c:customLookup objectAPIName="User" IconName="standard:user" selectedRecord="{!v.selectedLookUpRecord}" label="To"/>
+                    <lightning:input name="input3" value="{!v.subjectValue}" placeholder="type here..." label="Subject"/><br/>
+                    
+                    <label class="uiLabel-left form-element__label uiLabel" data-aura-class="uiLabel"><span class="" >Message</span></label>
+                    <lightning:inputRichText value="{!v.newMessageBody}" placeholder="Type something interesting" shareWithEntityId="{!v.recordId}"><lightning:insertImageButton/></lightning:inputRichText>
+                    
+                    <br/>
+                    
+                    <lightning:input aura:id="fileId" onchange="{!c.handleFilesChange}" type="file" accept="image/png, .zip" name="file" label="Upload Attachment" multiple="true"/>
+                    
+                </div>
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand" 
+                                      label="Send"
+                                      title="Send"
+                                      onclick="{! c.sendFirstMessage}"/>
+                    <lightning:button variant="brand" 
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{!c.closeModel}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+      
+    </aura:if>
+        
+    
+</aura:component>

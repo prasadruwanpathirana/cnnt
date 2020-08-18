@@ -1,0 +1,107 @@
+<!-- 
+Component Name    : MSG_NewPOCAgentView
+Description       : Main messaging view which holds the sub components 
+Created By        : Sameera
+Created Date      : 04-08-2020
+
+Modification Log: 
+Developer                   Date                   Description
+Sameera De Silva		8/11/2020				Added "previousePageToken","nextPageToken",
+												"isValuesAvailable","isNextDisabled","isPreviousDisabled" attributes 
+-->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" controller="MSGDirectMessageUtil" access="global">
+	
+    <!-- aura attributes -->
+    <aura:attribute name="directMsgWrapper" type="MSGDirectMessageWrapper[]" />
+	<aura:attribute name="selectedMsgWrapper" type="MSGDirectMessageWrapper" />
+	<aura:attribute name="isOpenNewMsg" type="boolean" default="false" />
+	<aura:attribute name="openBackupAgentModal" type="Boolean" />
+	<aura:attribute name="selectedAccountLookUpRecords" type="sObject" default="{}" />
+	<aura:attribute name="selectedUserLookUpRecords" type="sObject" default="{}" />
+	<aura:attribute name="newMessageBody" type="String" />
+	<aura:attribute name="subjectValue" type="String" />
+	<aura:attribute name="replyValue" type="String" />
+	<aura:attribute name="userIdValue" type="String" />
+	<aura:attribute name="selectedFeedIdValue" type="String" />
+	<aura:attribute Name="selItem" type="object" access="public" />
+	<aura:attribute name="feedElementID" type="String" />
+	<aura:attribute name="titleName" type="String" />
+	<aura:attribute name="toggleValue" type="boolean" />
+	<aura:attribute name="loaded" type="Boolean" default="true" />
+	<aura:attribute name="idX" type="String" />
+	<aura:attribute name="isSpinnerHide" type="Boolean" default="true" />
+	<aura:attribute name="attachId" type="String" />
+	<aura:attribute name="fileName" type="String" default="No File Selected.." />
+	<aura:attribute name="accept" type="List" default="['.pdf', '.zip','.txt']" />
+	<aura:attribute name="multiple" type="Boolean" default="true" />
+	<aura:attribute name="markDirectMsgWrapper" type="MSGDirectMessageWrapper[]" />
+	<aura:attribute name="unMarkedDirectMsgWrapper" type="MSGDirectMessageWrapper[]" />
+	<aura:attribute name="allDirectMsgWrapper" type="MSGDirectMessageWrapper[]" />
+	<aura:attribute name="FullDirectMsgWrapper" type="MSGDirectMessageWrapper[]" />
+    
+    <aura:attribute name="isConnectAPI" type="Boolean" default="true" />
+    <aura:attribute name="PageNumber" type="integer" default="1"/>
+    <aura:attribute name="DMList" type="MSGDirectMessageWrapper"/>
+    <aura:attribute name="TotalRecords" type="integer" default="0"/>
+    <aura:attribute name="RecordStart" type="integer" default="0"/>
+    <aura:attribute name="RecordEnd" type="integer" default="0"/>
+    <aura:attribute name="TotalPages" type="integer" default="0"/>
+    <aura:attribute name="DetailPageNumber" type="integer" default="1"/>
+    <aura:attribute name="DMDetailList" type="MSGDirectMessageWrapper.DirectMessageComments"/>
+    <aura:attribute name="DetailTotalRecords" type="integer" default="0"/>
+    <aura:attribute name="DetailRecordStart" type="integer" default="0"/>
+    <aura:attribute name="DetailRecordEnd" type="integer" default="0"/>
+    <aura:attribute name="DetailTotalPages" type="integer" default="0"/>
+    <aura:attribute name="FeedIDValue" type="Id"/>
+    
+    <!--Sameera-->
+    <aura:attribute name="previousePageToken" type="String"></aura:attribute>
+    <aura:attribute name="nextPageToken" type="String"></aura:attribute> 
+    <aura:attribute name="isValuesAvailable" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="isNextDisabled" type="Boolean"></aura:attribute>
+    <aura:attribute name="isPreviousDisabled" type="Boolean"></aura:attribute>
+    <!-- end aura attributes -->
+    
+    
+    <!-- aura methods -->
+	<aura:method name="parentMethod" action="{!c.doInit}" />
+    <!-- end aura methods -->
+    
+    <!-- aura handlers -->
+    <aura:handler name="init" value="this" action="{!c.doInit}" />
+    <!-- end aura handlers -->
+    
+    <lightning:workspaceAPI aura:id="workspace" />
+
+	<div class="slds-box" style="padding: 5px;margin-bottom: -22px; margin-top: -15px;">
+        <!-- header -->
+		<c:MSG_MessagingHeader directMsgWrapper="{!v.directMsgWrapper}" isOpenNewMsg="{!v.isOpenNewMsg}" titleName="{!v.titleName}" openBackupAgentModal="{!v.openBackupAgentModal}" markDirectMsgWrapper="{!v.markDirectMsgWrapper}" unMarkedDirectMsgWrapper="{!v.unMarkedDirectMsgWrapper}" allDirectMsgWrapper="{!v.allDirectMsgWrapper}" FullDirectMsgWrapper="{!v.FullDirectMsgWrapper}" /> </div>
+	<div class="slds-p-bottom_x-small"></div>
+	<div class="slds-grid slds-wrap">
+		<div class="slds-col slds-size_1-of-1"> 
+            <span><br/></span> 
+        </div>
+		<aura:if isTrue="{!$Browser.isPhone}">
+            <!--If mobile phone -->
+			<div class="slds-col slds-size_4-of-4 slds-theme_shade ">
+                <!-- messaging list --> 
+                <c:MSG_MessagingList isNextDisabled="{!v.isNextDisabled}" isPreviousDisabled="{!v.isPreviousDisabled}" previousePageToken="{!v.previousePageToken}" nextPageToken="{!v.nextPageToken}" isValuesAvailable="{!v.isValuesAvailable}" FeedIDValue="{!v.FeedIDValue}" DetailPageNumber="{!v.DetailPageNumber}" isConnectAPI="{!v.isConnectAPI}" TotalRecords="{!v.TotalRecords}" RecordEnd="{!v.RecordEnd}" RecordStart="{!v.RecordStart}" PageNumber="{!v.PageNumber}" TotalPages="{!v.TotalPages}" isSpinnerHide="{!v.isSpinnerHide}" directMsgWrapper="{!v.directMsgWrapper}" selectedFeedIdValue="{!v.selectedFeedIdValue}" selectedMsgWrapper="{!v.selectedMsgWrapper}" replyValue="{!v.replyValue}" /> </div>
+			<div class="slds-col slds-size_4-of-4 slds-box slds-theme_default">
+                <!-- messaging view -->
+				<c:MSG_CommonMessagingView isConnectAPI="{!v.isConnectAPI}" directMsgWrapper="{!v.directMsgWrapper}" userIdValue="{!v.userIdValue}" isSpinnerHide="{!v.isSpinnerHide}" selectedMsgWrapper="{!v.selectedMsgWrapper}" selectedFeedIdValue="{!v.selectedFeedIdValue}" replyValue="{!v.replyValue}" attachId="{!v.attachId}" /> </div>
+			<aura:set attribute="else">
+                <!--If dekstop version -->
+				<div class="slds-col slds-size_1-of-4 slds-theme_shade ">
+                    <!-- messaging list -->
+					 <c:MSG_MessagingList isNextDisabled="{!v.isNextDisabled}" isPreviousDisabled="{!v.isPreviousDisabled}" previousePageToken="{!v.previousePageToken}" nextPageToken="{!v.nextPageToken}" isValuesAvailable="{!v.isValuesAvailable}" FeedIDValue="{!v.FeedIDValue}" DetailPageNumber="{!v.DetailPageNumber}" isConnectAPI="{!v.isConnectAPI}" TotalRecords="{!v.TotalRecords}" RecordEnd="{!v.RecordEnd}" RecordStart="{!v.RecordStart}" PageNumber="{!v.PageNumber}" TotalPages="{!v.TotalPages}" isSpinnerHide="{!v.isSpinnerHide}" directMsgWrapper="{!v.directMsgWrapper}" selectedFeedIdValue="{!v.selectedFeedIdValue}" selectedMsgWrapper="{!v.selectedMsgWrapper}" replyValue="{!v.replyValue}" /> </div>
+				<div class="slds-col slds-size_3-of-4 slds-box slds-theme_default">
+                    <!-- messaging view -->
+					<c:MSG_CommonMessagingView isConnectAPI="{!v.isConnectAPI}"  directMsgWrapper="{!v.directMsgWrapper}" userIdValue="{!v.userIdValue}" isSpinnerHide="{!v.isSpinnerHide}" selectedMsgWrapper="{!v.selectedMsgWrapper}" selectedFeedIdValue="{!v.selectedFeedIdValue}" replyValue="{!v.replyValue}" attachId="{!v.attachId}" /> </div>
+			</aura:set> 
+		</aura:if>
+	</div>
+	<!--New Message Modal Box-->
+	<aura:if isTrue="{!v.isOpenNewMsg}">
+		<c:MSG_NewMessageView parent="{! this }" isSpinnerHide="{!v.isSpinnerHide}" selectedAccountLookUpRecords="{!v.selectedAccountLookUpRecords}" selectedUserLookUpRecords="{!v.selectedUserLookUpRecords}" newMessageBody="{!v.newMessageBody}" subjectValue="{!v.subjectValue}" isOpenNewMsg="{!v.isOpenNewMsg}" /> </aura:if>
+	<!--Backup Advisor Modal Box-->
+	<c:MSG_BackupAdvisorView openBackupAgentModal="{!v.openBackupAgentModal}" /> </aura:component>

@@ -1,0 +1,46 @@
+.THIS.redOnYellow {
+    fill:yellow;
+}
+.THIS.inputText {
+    font-size: 14px;
+    width: 200px;
+    height: 35px;
+    position: absolute;
+    top: 50px;
+}
+.THIS .image svg {
+    fill : white;
+}
+.THIS .image {
+    background-color:#2BAB27 !important;
+}
+.THIS .colour svg{
+    fill:red !important;
+}
+.THIS a:hover {
+  background-color: transparent !important;
+}
+.THIS .colour {
+    background-color:transparent !important;
+}
+.THIS .dynamictoggleHide {
+    display: none;
+}
+.THIS .selectStyle{
+    display: inline-block;
+}
+.THIS .current{
+    background:white;
+    border-left: solid;
+    border-width: 0 0 0 5px;
+    border-left-color: #2574a9;
+    height: 5rem;
+}
+.THIS .border-class{
+    border: solid .5px #d4d4d4;
+    border-radius: 5px;
+    height: 5rem;
+}
+.THIS  .spinnerX {
+    position:initial;
+}

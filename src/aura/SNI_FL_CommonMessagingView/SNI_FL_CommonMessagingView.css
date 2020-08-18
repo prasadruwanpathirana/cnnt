@@ -1,0 +1,16 @@
+@media screen and (max-width: 768px) {
+
+  .THIS .btnReply{
+        margin-top: 5px;
+        margin-left:10px;
+        margin-bottom:5px;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1500px) {
+
+  .THIS .btnReply{
+        margin-top: 160px;
+     
+    }
+}

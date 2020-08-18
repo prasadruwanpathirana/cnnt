@@ -1,0 +1,14 @@
+.THIS .border-class{
+    border: solid .5px #d4d4d4;
+    border-radius: 5px;
+    height: 5rem;
+}
+.THIS .colour {
+    background-color:transparent !important;
+}
+.THIS a:hover {
+  background-color: transparent !important;
+}
+.THIS .colour svg{
+    fill:red !important;
+}

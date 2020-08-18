@@ -1,0 +1,28 @@
+<!--
+    Name: ModalPopup.cmp
+-->
+<aura:component >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="title" type="String" />
+    <div aura:id="modalDiv">
+        <div role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.handleCloseModal}">
+                        X<span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h1 class="slds-text-heading--medium">{!v.title}</h1>
+                </div>
+                 
+                
+            <div class="slds-modal__container">
+                <c:MSG_NewPOCAgentView isConnectAPI="false" titleName="testPrasad" />
+            </div>
+        
+                
+                
+            </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>            
+    </div>
+</aura:component>
